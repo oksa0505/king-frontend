@@ -70,11 +70,12 @@ export default function KingOfTheHillPage() {
     const fetchData = async () => {
       try {
         const t = Date.now();
-        const [kingRes, feesRes, leaderboardRes, dexRes] = await Promise.all([
+        const [kingRes, feesRes, leaderboardRes, dexRes, historyRes] = await Promise.all([
           fetch(`https://king-backend-1d6o.onrender.com/king?t=${t}`).then(r => r.json()),
           fetch(`https://king-backend-1d6o.onrender.com/fees?t=${t}`).then(r => r.json()),
           fetch(`https://king-backend-1d6o.onrender.com/leaderboard?t=${t}`).then(r => r.json()),
-          fetch(`https://api.dexscreener.com/latest/dex/tokens/0xE2aC5e46c52707Bd8dF75de30172c588aBB24b07`).then(r => r.json()).catch(() => null)
+          fetch(`https://api.dexscreener.com/latest/dex/tokens/0xE2aC5e46c52707Bd8dF75de30172c588aBB24b07`).then(r => r.json()).catch(() => null),
+          fetch(`https://king-backend-1d6o.onrender.com/history?t=${t}`).then(r => r.json())
         ]);
 
         let tokenPriceUsd = 0.0000001; // fallback
@@ -82,12 +83,18 @@ export default function KingOfTheHillPage() {
           tokenPriceUsd = parseFloat(dexRes.pairs[0].priceUsd);
         }
 
+        // Get actual start time from history (first item since it's reversed)
+        let reignStartDate = new Date();
+        if (historyRes && historyRes.length > 0 && historyRes[0].start_time) {
+            reignStartDate = new Date(historyRes[0].start_time * 1000);
+        }
+
         const formattedKingBalance = formatEthers(kingRes.balance);
         setKing({
           address: kingRes.currentKing || "No King Yet",
           tokenAmount: formattedKingBalance,
           usdValue: formattedKingBalance * tokenPriceUsd,
-          reignStarted: new Date()
+          reignStarted: reignStartDate
         });
 
         const totalFees = formatEthers(feesRes.totalFees);
