@@ -1,0 +1,196 @@
+"use client";
+
+import { KingDisplay } from "@/components/king-display";
+import { FeesTracker } from "@/components/fees-tracker";
+import { Leaderboard } from "@/components/leaderboard";
+import { HowToPlay } from "@/components/how-to-play";
+import { RecentBuysTicker } from "@/components/recent-buys-ticker";
+import { useEffect, useState } from "react";
+
+function formatEthers(weiStr: string, decimals = 18): number {
+  if (!weiStr) return 0;
+  return Number(BigInt(weiStr)) / Math.pow(10, decimals);
+}
+
+const mockRecentBuys = [
+  {
+    address: "0xf1234567890abcdef1234567890abcdef123456",
+    amount: 250000,
+    timestamp: new Date(Date.now() - 1000 * 60 * 2),
+  },
+  {
+    address: "0xa9876543210fedcba9876543210fedcba987654",
+    amount: 150000,
+    timestamp: new Date(Date.now() - 1000 * 60 * 5),
+  },
+  {
+    address: "0xb2468013579bdf2468013579bdf2468013579b",
+    amount: 500000,
+    timestamp: new Date(Date.now() - 1000 * 60 * 12),
+  },
+  {
+    address: "0xc1357924680ace1357924680ace1357924680a",
+    amount: 75000,
+    timestamp: new Date(Date.now() - 1000 * 60 * 18),
+  },
+  {
+    address: "0xd8642097531fdb8642097531fdb8642097531f",
+    amount: 320000,
+    timestamp: new Date(Date.now() - 1000 * 60 * 25),
+  },
+  {
+    address: "0xe9753186420eca9753186420eca9753186420e",
+    amount: 180000,
+    timestamp: new Date(Date.now() - 1000 * 60 * 32),
+  },
+];
+
+export default function KingOfTheHillPage() {
+  const [king, setKing] = useState<any>({
+    address: "Loading...",
+    tokenAmount: 0,
+    usdValue: 0,
+    reignStarted: new Date()
+  });
+  
+  const [fees, setFees] = useState<any>({
+    totalFeesEth: 0,
+    totalFeesUsd: 0,
+    kingRewardEth: 0,
+    kingRewardUsd: 0,
+    buybackEth: 0,
+    buybackUsd: 0,
+    totalBurned: 0,
+  });
+
+  const [holders, setHolders] = useState<any[]>([]);
+  const [tokensNeededForKing, setTokensNeededForKing] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [kingRes, feesRes, leaderboardRes] = await Promise.all([
+          fetch('http://localhost:3000/king').then(r => r.json()),
+          fetch('http://localhost:3000/fees').then(r => r.json()),
+          fetch('http://localhost:3000/leaderboard').then(r => r.json())
+        ]);
+
+        const formattedKingBalance = formatEthers(kingRes.balance);
+        setKing({
+          address: kingRes.currentKing || "No King Yet",
+          tokenAmount: formattedKingBalance,
+          usdValue: formattedKingBalance * 0.05, // Mock USD price
+          reignStarted: new Date()
+        });
+
+        const totalFees = formatEthers(feesRes.totalFees);
+        const kingShare = formatEthers(feesRes.kingShare);
+        const burnShare = formatEthers(feesRes.burnShare);
+        
+        setFees({
+          totalFeesEth: totalFees,
+          totalFeesUsd: totalFees * 3000, // Mock ETH price
+          kingRewardEth: kingShare,
+          kingRewardUsd: kingShare * 3000,
+          buybackEth: burnShare,
+          buybackUsd: burnShare * 3000,
+          totalBurned: formatEthers(feesRes.totalBurned)
+        });
+
+        const totalSupply = 1_000_000_000;
+        const formattedHolders = leaderboardRes.map((h: any, i: number) => {
+          const amount = formatEthers(h.balance);
+          return {
+            rank: i + 1,
+            address: h.address,
+            amount: amount,
+            percentSupply: (amount / totalSupply) * 100,
+            isKing: h.address === kingRes.currentKing
+          };
+        });
+        setHolders(formattedHolders);
+
+        if (formattedHolders.length > 1) {
+          setTokensNeededForKing(formattedHolders[0].amount - formattedHolders[1].amount + 1);
+        } else {
+          setTokensNeededForKing(0);
+        }
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <main className="min-h-screen pb-16">
+      {/* Header */}
+      <header className="py-4 border-b border-border/50">
+        <div className="container mx-auto px-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">👑</span>
+            <span className="font-bold text-lg text-gold">KING</span>
+          </div>
+          <nav className="flex items-center gap-4">
+            <a
+              href="https://basescan.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Contract
+            </a>
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Twitter
+            </a>
+            <a
+              href="https://t.me"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Telegram
+            </a>
+          </nav>
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4">
+        {/* King Display */}
+        <KingDisplay king={king} />
+
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-4" />
+
+        {/* Fees Tracker */}
+        <FeesTracker fees={fees} />
+
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-4" />
+
+        {/* Leaderboard */}
+        <Leaderboard
+          holders={holders}
+          tokensNeededForKing={tokensNeededForKing}
+        />
+
+        {/* Divider */}
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-4" />
+
+        {/* How to Play */}
+        <HowToPlay />
+      </div>
+
+      {/* Recent Buys Ticker */}
+      <RecentBuysTicker buys={mockRecentBuys} />
+    </main>
+  );
+}
