@@ -98,8 +98,12 @@ export default function KingOfTheHillPage() {
           totalBurned: formatEthers(feesRes.totalBurned)
         });
 
-        const totalSupply = 1_000_000_000;
-        const formattedHolders = leaderboardRes.map((h: any, i: number) => {
+        const totalSupply = 100_000_000_000; // Updated to 100 Billion
+        
+        // Filter out the Uniswap Pool address from the leaderboard to only show real players
+        const realHolders = leaderboardRes.filter((h: any) => h.address.toLowerCase() !== "0x498581fF718922c3f8e6A244956aF099B2652b2b".toLowerCase());
+
+        const formattedHolders = realHolders.map((h: any, i: number) => {
           const amount = formatEthers(h.balance);
           return {
             rank: i + 1,
