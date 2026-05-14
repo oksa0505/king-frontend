@@ -121,11 +121,11 @@ export function Leaderboard({ holders, tokensNeededForKing }: LeaderboardProps) 
         >
           <Card className="inline-block bg-purple/10 border-purple/30 px-4 py-2">
             <p className="text-sm text-purple">
-              You need{" "}
+              It takes{" "}
               <span className="font-bold text-gold">
                 <AnimatedNumber value={tokensNeededForKing} decimals={0} />
               </span>{" "}
-              more tokens to become King!
+              tokens to claim the Throne!
             </p>
           </Card>
         </motion.div>
