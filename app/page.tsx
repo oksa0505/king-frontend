@@ -69,10 +69,11 @@ export default function KingOfTheHillPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const t = Date.now();
         const [kingRes, feesRes, leaderboardRes] = await Promise.all([
-          fetch('http://localhost:3000/king').then(r => r.json()),
-          fetch('http://localhost:3000/fees').then(r => r.json()),
-          fetch('http://localhost:3000/leaderboard').then(r => r.json())
+          fetch(`https://king-backend-1d6o.onrender.com/king?t=${t}`).then(r => r.json()),
+          fetch(`https://king-backend-1d6o.onrender.com/fees?t=${t}`).then(r => r.json()),
+          fetch(`https://king-backend-1d6o.onrender.com/leaderboard?t=${t}`).then(r => r.json())
         ]);
 
         const formattedKingBalance = formatEthers(kingRes.balance);
