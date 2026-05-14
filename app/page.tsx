@@ -128,8 +128,8 @@ export default function KingOfTheHillPage() {
         });
         setHolders(formattedHolders);
 
-        if (formattedHolders.length > 1) {
-          setTokensNeededForKing(formattedHolders[0].amount - formattedHolders[1].amount + 1);
+        if (formattedHolders.length > 0) {
+          setTokensNeededForKing(formattedHolders[0].amount + 1);
         } else {
           setTokensNeededForKing(0);
         }
