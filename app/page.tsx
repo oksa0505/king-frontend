@@ -70,17 +70,23 @@ export default function KingOfTheHillPage() {
     const fetchData = async () => {
       try {
         const t = Date.now();
-        const [kingRes, feesRes, leaderboardRes] = await Promise.all([
+        const [kingRes, feesRes, leaderboardRes, dexRes] = await Promise.all([
           fetch(`https://king-backend-1d6o.onrender.com/king?t=${t}`).then(r => r.json()),
           fetch(`https://king-backend-1d6o.onrender.com/fees?t=${t}`).then(r => r.json()),
-          fetch(`https://king-backend-1d6o.onrender.com/leaderboard?t=${t}`).then(r => r.json())
+          fetch(`https://king-backend-1d6o.onrender.com/leaderboard?t=${t}`).then(r => r.json()),
+          fetch(`https://api.dexscreener.com/latest/dex/tokens/0xE2aC5e46c52707Bd8dF75de30172c588aBB24b07`).then(r => r.json()).catch(() => null)
         ]);
+
+        let tokenPriceUsd = 0.0000001; // fallback
+        if (dexRes && dexRes.pairs && dexRes.pairs.length > 0) {
+          tokenPriceUsd = parseFloat(dexRes.pairs[0].priceUsd);
+        }
 
         const formattedKingBalance = formatEthers(kingRes.balance);
         setKing({
           address: kingRes.currentKing || "No King Yet",
           tokenAmount: formattedKingBalance,
-          usdValue: formattedKingBalance * 0.05, // Mock USD price
+          usdValue: formattedKingBalance * tokenPriceUsd,
           reignStarted: new Date()
         });
 
