@@ -46,6 +46,13 @@ const mockRecentBuys = [
 ];
 
 export default function KingOfTheHillPage() {
+  // ==========================================
+  // CONFIGURATION (TO UPDATE FOR THE NEW TOKEN)
+  // ==========================================
+  const TOKEN_ADDRESS = "0xE2aC5e46c52707Bd8dF75de30172c588aBB24b07";
+  const POOL_ADDRESS = "0x498581fF718922c3f8e6A244956aF099B2652b2b";
+  // ==========================================
+
   const [king, setKing] = useState<any>({
     address: "Loading...",
     tokenAmount: 0,
@@ -74,7 +81,7 @@ export default function KingOfTheHillPage() {
           fetch(`https://king-backend-1d6o.onrender.com/king?t=${t}`).then(r => r.json()),
           fetch(`https://king-backend-1d6o.onrender.com/fees?t=${t}`).then(r => r.json()),
           fetch(`https://king-backend-1d6o.onrender.com/leaderboard?t=${t}`).then(r => r.json()),
-          fetch(`https://api.dexscreener.com/latest/dex/tokens/0xE2aC5e46c52707Bd8dF75de30172c588aBB24b07`).then(r => r.json()).catch(() => null),
+          fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_ADDRESS}`).then(r => r.json()).catch(() => null),
           fetch(`https://king-backend-1d6o.onrender.com/history?t=${t}`).then(r => r.json())
         ]);
 
@@ -114,7 +121,7 @@ export default function KingOfTheHillPage() {
         const totalSupply = 100_000_000_000; // Updated to 100 Billion
         
         // Filter out the Uniswap Pool address from the leaderboard to only show real players
-        const realHolders = leaderboardRes.filter((h: any) => h.address.toLowerCase() !== "0x498581fF718922c3f8e6A244956aF099B2652b2b".toLowerCase());
+        const realHolders = leaderboardRes.filter((h: any) => h.address.toLowerCase() !== POOL_ADDRESS.toLowerCase());
 
         const formattedHolders = realHolders.map((h: any, i: number) => {
           const amount = formatEthers(h.balance);
