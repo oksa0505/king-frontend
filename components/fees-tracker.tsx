@@ -70,23 +70,23 @@ export function FeesTracker({ fees }: { fees: FeesData }) {
           </Card>
         </motion.div>
 
-        {/* Treasury (20%) */}
+        {/* Buyback & Burn (20%) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="bg-card/80 backdrop-blur-sm border-blue-500/40 p-5 relative overflow-hidden">
-            <div className="absolute top-2 right-2 px-2 py-0.5 bg-blue-500/20 rounded text-xs text-blue-400 font-semibold">
+          <Card className="bg-card/80 backdrop-blur-sm border-burn/40 p-5 relative overflow-hidden">
+            <div className="absolute top-2 right-2 px-2 py-0.5 bg-burn/20 rounded text-xs text-burn font-semibold">
               20%
             </div>
             <div className="flex flex-col items-center gap-2">
-              <p className="text-blue-400 text-sm font-medium">💼 Treasury (Marketing)</p>
-              <p className="text-2xl md:text-3xl font-bold text-blue-400">
+              <p className="text-burn text-sm font-medium">🔥 Manual Buyback & Burn</p>
+              <p className="text-2xl md:text-3xl font-bold text-burn">
                 <AnimatedNumber value={fees.buybackEth} decimals={4} suffix=" ETH" />
               </p>
-              <p className="text-sm text-blue-400/70">
+              <p className="text-sm text-burn/70">
                 <AnimatedNumber value={fees.buybackUsd} decimals={2} prefix="$" />
               </p>
             </div>
