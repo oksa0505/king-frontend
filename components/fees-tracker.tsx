@@ -70,48 +70,29 @@ export function FeesTracker({ fees }: { fees: FeesData }) {
           </Card>
         </motion.div>
 
-        {/* Buyback & Burn (20%) */}
+        {/* Treasury (20%) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="bg-card/80 backdrop-blur-sm border-burn/40 p-5 relative overflow-hidden">
-            <div className="absolute top-2 right-2 px-2 py-0.5 bg-burn/20 rounded text-xs text-burn font-semibold">
+          <Card className="bg-card/80 backdrop-blur-sm border-blue-500/40 p-5 relative overflow-hidden">
+            <div className="absolute top-2 right-2 px-2 py-0.5 bg-blue-500/20 rounded text-xs text-blue-400 font-semibold">
               20%
             </div>
             <div className="flex flex-col items-center gap-2">
-              <p className="text-burn text-sm font-medium">🔥 Buyback & Burn</p>
-              <p className="text-2xl md:text-3xl font-bold text-burn">
+              <p className="text-blue-400 text-sm font-medium">💼 Treasury (Marketing)</p>
+              <p className="text-2xl md:text-3xl font-bold text-blue-400">
                 <AnimatedNumber value={fees.buybackEth} decimals={4} suffix=" ETH" />
               </p>
-              <p className="text-sm text-burn/70">
+              <p className="text-sm text-blue-400/70">
                 <AnimatedNumber value={fees.buybackUsd} decimals={2} prefix="$" />
               </p>
             </div>
           </Card>
         </motion.div>
       </div>
-
-      {/* Total Burned Stats */}
-      <motion.div
-        className="mt-6 text-center"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.4 }}
-      >
-        <Card className="inline-flex items-center gap-3 bg-card/60 border-border px-6 py-3">
-          <span className="text-2xl">🔥</span>
-          <div className="text-left">
-            <p className="text-xs text-muted-foreground">Total Tokens Burned</p>
-            <p className="text-lg font-bold text-burn">
-              <AnimatedNumber value={fees.totalBurned} decimals={0} suffix=" KING" />
-            </p>
-          </div>
-        </Card>
-      </motion.div>
     </section>
   );
 }
