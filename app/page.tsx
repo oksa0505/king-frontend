@@ -52,7 +52,7 @@ export default function KingOfTheHillPage() {
   const TOKEN_ADDRESS = "0xE2aC5e46c52707Bd8dF75de30172c588aBB24b07";
   const POOL_ADDRESS = "0x498581fF718922c3f8e6A244956aF099B2652b2b";
   const KING_CONTRACT_ADDRESS = "0x8784e630ED38ed96a723894c6c588fE6eC0AE6E6"; // REMIX CONTRACT
-  const TWITTER_LINK = "https://twitter.com/undertaker"; // UPDATE THIS
+  const TWITTER_LINK = "https://twitter.com/"; // UPDATE THIS
   // ==========================================
 
   const [king, setKing] = useState<any>({
