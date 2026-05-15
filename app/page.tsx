@@ -51,6 +51,8 @@ export default function KingOfTheHillPage() {
   // ==========================================
   const TOKEN_ADDRESS = "0xE2aC5e46c52707Bd8dF75de30172c588aBB24b07";
   const POOL_ADDRESS = "0x498581fF718922c3f8e6A244956aF099B2652b2b";
+  const KING_CONTRACT_ADDRESS = "0x8784e630ED38ed96a723894c6c588fE6eC0AE6E6"; // REMIX CONTRACT
+  const TWITTER_LINK = "https://twitter.com/your_twitter"; // UPDATE THIS
   // ==========================================
 
   const [king, setKing] = useState<any>({
@@ -161,7 +163,7 @@ export default function KingOfTheHillPage() {
           </div>
           <nav className="flex items-center gap-4">
             <a
-              href="https://basescan.org"
+              href={`https://basescan.org/address/${KING_CONTRACT_ADDRESS}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -169,7 +171,7 @@ export default function KingOfTheHillPage() {
               Contract
             </a>
             <a
-              href="https://twitter.com"
+              href={TWITTER_LINK}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -177,12 +179,12 @@ export default function KingOfTheHillPage() {
               Twitter
             </a>
             <a
-              href="https://t.me"
+              href={`https://clanker.world/clanker/${TOKEN_ADDRESS}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="px-4 py-1.5 bg-gradient-to-r from-amber-500 to-yellow-600 text-black font-bold rounded-full hover:scale-105 transition-transform"
             >
-              Telegram
+              BUY TOKEN
             </a>
           </nav>
         </div>
@@ -213,9 +215,6 @@ export default function KingOfTheHillPage() {
         {/* How to Play */}
         <HowToPlay />
       </div>
-
-      {/* Recent Buys Ticker */}
-      <RecentBuysTicker buys={mockRecentBuys} />
     </main>
   );
 }
